@@ -1,0 +1,72 @@
+---
+  
+# Make directories according to inventory file and cleanup last config
+  - name: Make directories/cleanup 
+    hosts: leafs_DC1, leafs_DC2, spines_DC1, spines_DC2
+    tasks:
+    - name: Delete old config files
+      file: 
+        path: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}"
+        state: absent
+    - name: Register variables (underlay)
+      include_vars:
+        file: "{{lookup('env','PWD')}}/vars/underlay.yml"
+        name: underlay
+    - name: Create config directory
+      file:
+        path: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}"
+        state: directory
+        
+  - name: Create common configs for spines and leafs
+    hosts: leafs_DC1, leafs_DC2, spines_DC1, spines_DC2
+    tasks: 
+    - name: Register variables (underlay)
+      include_vars:
+        file: "{{lookup('env','PWD')}}/vars/underlay.yml"
+        name: underlay
+
+    - name: Create Interface config
+      template: 
+        src: "{{lookup('env','PWD')}}/templates/interfaces.j2"
+        dest: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_interface.cfg"
+    
+ 
+  - name: Create spine configurations for underlay
+    hosts: spines_DC1, spines_DC2
+    tasks: 
+    - name: Register variables (underlay)
+      include_vars:
+        file: "{{lookup('env','PWD')}}/vars/underlay.yml"
+        name: underlay
+    - name: Create Spine EVPN Underlay config
+      template: 
+        src: "{{lookup('env','PWD')}}/templates/spine_EVPN.j2"
+        dest: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_EVPN_underlay.cfg"
+
+  - name: Create leaf configurations for underlay and VXLAN tenants
+    hosts: leafs_DC1, leafs_DC2
+    tasks: 
+    - name: Register variables (underlay)
+      include_vars:
+        file: "{{lookup('env','PWD')}}/vars/underlay.yml"
+        name: underlay
+    - name: Register VXLAN variables
+      include_vars:
+        file: "{{lookup('env','PWD')}}/vars/VXLAN.yml"
+        name: VXLAN
+    - name: Create Leaf EVPN Underlay config
+      template: 
+        src: "{{lookup('env','PWD')}}/templates/leaf_EVPN.j2"
+        dest: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_EVPN_underlay.cfg"   
+    - name: Create VXLAN Configuration
+      template: 
+        src: "{{lookup('env','PWD')}}/templates/VXLAN.j2"
+        dest: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_VXLAN.cfg"
+
+
+
+
+
+    
+
+

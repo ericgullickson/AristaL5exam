@@ -1,0 +1,6 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+  - name: Accept SSH key for each host 
+    connection: local
+    shell: "ssh-keyscan -H {{ inventory_hostname|lower }} >> ~/.ssh/known_hosts"

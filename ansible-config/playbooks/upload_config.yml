@@ -1,0 +1,22 @@
+---
+  - name: Upload DCI config
+    hosts: DCI_Switch
+    tasks:
+    - name: Uploading config
+      arista.eos.eos_config: 
+        src:  "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_full_config.cfg"
+  - name: Upload interface and underlay config to switches
+    hosts: leafs_DC1, leafs_DC2, spines_DC1, spines_DC2
+    tasks: 
+    - name: Upload Interface config
+      arista.eos.eos_config: 
+        src: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_interface.cfg"
+    - name: Upload EVPN Underlay config
+      arista.eos.eos_config: 
+        src: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_EVPN_underlay.cfg"
+  - name: Upload VXLAN Overlay config to switches
+    hosts: leafs_DC1, leafs_DC2
+    tasks:
+    - name: Uploading VXLAN config
+      arista.eos.eos_config: 
+        src:  "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_VXLAN.cfg"
