@@ -62,6 +62,10 @@
       template: 
         src: "{{lookup('env','PWD')}}/templates/VXLAN.j2"
         dest: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_VXLAN.cfg"
+    - name: Create MLAG Configuration
+      template: 
+        src: "{{lookup('env','PWD')}}/templates/mlag.j2"
+        dest: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_mlag.cfg"
 
 
 

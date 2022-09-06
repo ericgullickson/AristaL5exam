@@ -1,0 +1,32 @@
+spanning-tree mode mstp
+no spanning-tree vlan-id 4094
+vlan 4094
+  trunk group MLAGPEER
+interface Vlan4094
+  description MLAG PEER LINK
+  {% if 'Odd' in underlay[inventory_hostname]['MLAG'] %}
+  ip address 192.168.255.1/30
+  {% else %}
+  ip address 192.168.255.2/30
+  {% endif %}
+interface Port-Channel10
+  description MLAG PEER LINK - LEAF
+  switchport mode trunk
+  switchport trunk group MLAGPEER
+mlag configuration
+  domain-id MLAG
+  local-interface Vlan4094
+  {% if 'Odd' in underlay[inventory_hostname]['MLAG'] %}
+  peer-address 192.168.255.2
+  {% else %}
+  peer-address 192.168.255.1
+  {% endif %}
+  peer-link Port-Channel10
+interface Ethernet1
+  description MLAG PEER LINK - LEAF
+  switchport mode trunk
+  channel-group 10 mode active
+interface Ethernet2
+  description MLAG PEER LINK -- LEAF
+  switchport mode trunk
+  channel-group 10 mode active
