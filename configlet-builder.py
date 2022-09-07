@@ -6,14 +6,12 @@ import yaml
 #ingest_config = Form.getFieldById( 'yaml_input' ).getValue()
 
 # Load data from yaml into variable
-# switches = yaml.load(ingest_config)
+switches = yaml.safe_load(ingest_config)
 
 # Get hostname from from
-# hostname = CVPGlobalVariables.getValue(GlobalVariableNames.CVP_SERIAL)
-hostname = "leaf1-DC1"
+hostname = CVPGlobalVariables.getValue(GlobalVariableNames.CVP_SERIAL)
+#hostname = "leaf1-DC1"
 
-with open("/Users/egullickson/OneDrive - Vortex Optics/Development/Git-Vortex/python/Arista/switch-config.yml", "r") as file:
-    switches = yaml.safe_load(file)
 
 for switch_name,switch_config in switches.items():
     if hostname in switch_name:
