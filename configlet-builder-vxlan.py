@@ -17,13 +17,13 @@ __date__ = "08/17/2022"
 
 
 # Get tenant config via yaml pasted into text field.
-tenet_input = Form.getFieldById( 'yaml_input' ).getValue()
+tenet_input = Form.getFieldById( 'tenant_input' ).getValue()
 
 # Load data from yaml into variable
 tenant_config = yaml.safe_load(tenet_input)
 
 # Get tenant config via yaml pasted into text field.
-switch_input = Form.getFieldById( 'yaml_input' ).getValue()
+switch_input = Form.getFieldById( 'switch_input' ).getValue()
 
 # Load data from yaml into variable
 switches = yaml.safe_load(switch_input)
