@@ -5,9 +5,9 @@ import requests
 import ssl
 
 ### Specific CVP Libraries
-#from cvplibrary import CVPGlobalVariables, GlobalVariableNames 
-#from cvplibrary import RestClient 
-#from cvplibrary import Form
+from cvplibrary import CVPGlobalVariables, GlobalVariableNames
+from cvplibrary import RestClient
+from cvplibrary import Form
 
 
 __author__ = "Eric Gullickson"
@@ -16,27 +16,28 @@ __version__ = "0.0.1"
 __date__ = "08/17/2022"
 
 
-# Get config via yaml pasted into text field.
-#ingest_config = Form.getFieldById( 'yaml_input' ).getValue()
+# Get tenant config via yaml pasted into text field.
+tenet_input = Form.getFieldById( 'yaml_input' ).getValue()
 
 # Load data from yaml into variable
-#tenants = yaml.load(ingest_config)
+tenant_config = yaml.safe_load(tenet_input)
 
-with open("/Users/egullickson/OneDrive - Vortex Optics/Development/Git-Vortex/python/Arista/vxlan.yml", "r") as file:
-    tenant_config = yaml.safe_load(file)
+# Get tenant config via yaml pasted into text field.
+switch_input = Form.getFieldById( 'yaml_input' ).getValue()
 
-with open("/Users/egullickson/OneDrive - Vortex Optics/Development/Git-Vortex/python/Arista/switch-config.yml", "r") as file:
-    switches = yaml.safe_load(file)
+# Load data from yaml into variable
+switches = yaml.safe_load(switch_input)
 
+#Test switch
 hostname="leaf1-DC1"
 
 if __name__ == '__main__':
 
     # Build VRFs
     for tenant in tenant_config["Tenants"]:
-        print("vrf instance %s" % tenant ) 
+        print("vrf instance %s" % tenant )
         print("ip routing vrf %s" % tenant )
-    
+
     # Build VLANs
     for tenant in tenant_config["Tenants"]:
         for L2VNI in tenant_config["Tenants"][tenant]["L2VNI"]:
